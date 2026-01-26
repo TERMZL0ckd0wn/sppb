@@ -1,0 +1,3 @@
+@section('user')
+Staff
+@endsection
