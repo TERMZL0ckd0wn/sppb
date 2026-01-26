@@ -49,6 +49,12 @@ class RecordController extends Controller
                     $status = 'late';
                     // Update database record to reflect the late status
                     $s->update(['borrow_status' => 'late']);
+
+                    // Jika rekod pinjaman jadi 'late', kemaskini status buku
+                    // dari 'borrowed' kepada 'lost' (jika masih ditandakan 'borrowed')
+                    book::where('barcode', $s->barcode)
+                        ->where('status', 'borrowed')
+                        ->update(['status' => 'lost']);
                 }
             }
 
@@ -94,6 +100,12 @@ class RecordController extends Controller
                     $status = 'late';
                     // Update database record to reflect the late status
                     $t->update(['borrow_status' => 'late']);
+
+                    // Jika rekod pinjaman jadi 'late', kemaskini status buku
+                    // dari 'borrowed' kepada 'lost' (jika masih ditandakan 'borrowed')
+                    book::where('barcode', $t->barcode)
+                        ->where('status', 'borrowed')
+                        ->update(['status' => 'lost']);
                 }
             }
 
