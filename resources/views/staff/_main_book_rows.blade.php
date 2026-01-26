@@ -1,8 +1,8 @@
 @forelse($books as $i => $book)
     @php
         $status = strtolower($book->status ?? 'tersedia');
-        $badgeClass = $status === 'dipinjam' ? 'bg-orange-100 text-orange-800' :
-                      (($status === 'hilang' || $status === 'rosak') ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800');
+        $badgeClass = $status === 'borrowed' ? 'bg-orange-100 text-orange-800' :
+                      (($status === 'lost' || $status === 'damaged') ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800');
     @endphp
     <tr class="hover:bg-gray-50">
         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-center">{{ ($books->firstItem() ?? 0) + $i }}</td>
