@@ -25,6 +25,10 @@ Route::get('/index', function () {
     return view('index');
 })->name('index');
 
+Route::get('/alumni', function () {
+    return view('AlumniKV');
+})->name('AlumniKV');
+
 Route::get('/layouts', function () {
     return view('layouts.app');
 })->name('layouts');

@@ -34,11 +34,14 @@
         </div>
 
         <!-- Pautan Bawah (Footer Action) -->
-        <div class="mt-24">
-            <a href="#" data-action="Senarai Buku" class="action-card text-lg font-extrabold text-blue-700 hover:text-blue-900 transition duration-200">
+
+            
+
+        <h2 class="text-2xl font-extrabold text-center text-blue-800 mb-8 tracking-widest mt-10">
+            <a href="#senarai-buku" data-action="Senarai Buku" class="action-card text-lg font-extrabold text-blue-700 hover:text-blue-900 transition duration-200">
                 vv SENARAI BUKU vv
             </a>
-        </div>
+        </h2>
 
         <!-- BAHAGIAN SENARAI BUKU (BARU) -->
         <section id="senarai-buku" class="mt-16 pt-10 border-t border-gray-300">

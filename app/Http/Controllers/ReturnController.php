@@ -16,7 +16,44 @@ class ReturnController extends Controller
     {
         // Get all borrowed books (status = 'borrowed')
         $borrowedBooks = book::where('status', 'borrowed')->orderBy('title')->get();
-        return view('staff.return', compact('borrowedBooks'));
+
+        // Collect returned records within the last 1 month
+        $records = collect();
+        $oneMonthAgo = Carbon::today()->subMonth();
+
+        $stds = std_borrow::where('borrow_status', 'returned')
+            ->whereNotNull('returned_date')
+            ->whereDate('returned_date', '>=', $oneMonthAgo)
+            ->get();
+        foreach ($stds as $s) {
+            $borrowerName = students::where('no_matrik', $s->no_matrik)->value('name') ?: $s->no_matrik;
+            $bookTitle = book::where('barcode', $s->barcode)->value('title') ?: $s->barcode;
+
+            $records->push([
+                'type' => 'Student',
+                'borrower' => $borrowerName,
+                'book' => $bookTitle,
+                'returned_date' => $s->returned_date ? Carbon::parse($s->returned_date)->toDateString() : '',
+            ]);
+        }
+
+        $ts = t_borrow::where('borrow_status', 'returned')
+            ->whereNotNull('returned_date')
+            ->whereDate('returned_date', '>=', $oneMonthAgo)
+            ->get();
+        foreach ($ts as $t) {
+            $borrowerName = teachers::where('no_matrik', $t->no_matrik)->value('name') ?: $t->no_matrik;
+            $bookTitle = book::where('barcode', $t->barcode)->value('title') ?: $t->barcode;
+
+            $records->push([
+                'type' => 'Teacher',
+                'borrower' => $borrowerName,
+                'book' => $bookTitle,
+                'returned_date' => $t->returned_date ? Carbon::parse($t->returned_date)->toDateString() : '',
+            ]);
+        }
+
+        return view('staff.return', compact('borrowedBooks', 'records'));
     }
 
     // API endpoint to get borrower info

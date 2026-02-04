@@ -106,50 +106,39 @@
         </div>
     </div>
 
-    <!-- Bahagian Senarai Buku  -->
-        
-        <div class="w-full">
-            <h2 class="text-2xl font-extrabold text-center text-blue-800 mb-8 tracking-widest">
-                <span class="text-4xl">VV</span> REKOD PEMULANGAN <span class="text-4xl">VV</span>
-            </h2>
+    <!-- rekod pemulangan buku sahaja -->
 
-            <!-- Kotak Carian -->
-            <div class="max-w-4xl mx-auto mb-6 flex items-center bg-white p-3 rounded-lg shadow-md border border-gray-200">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-400 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.197 5.197a7.5 7.5 0 0 0 10.607 10.607Z" />
-                </svg>
-                <input type="text" id="search-input" placeholder="Search" class="w-full focus:outline-none text-gray-700" onkeyup="filterTable()">
-            </div>
-
-            <!-- Jadual Senarai Buku -->
-            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-300">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-blue-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-bold text-gray-600 uppercase tracking-wider w-1/12">#</th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-bold text-gray-600 uppercase tracking-wider w-3/12">ID</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider w-6/12">NAMA BUKU</th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-bold text-gray-600 uppercase tracking-wider w-2/12">Status</th>
+        <div class="mt-8 max-w-4xl mx-auto">
+            <h3 class="text-lg font-semibold mb-4">Rekod Pemulangan</h3>
+            <div class="bg-white rounded-lg shadow border border-gray-200 overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-2">#</th>
+                            <th class="px-4 py-2">Borrower Name</th>
+                            <th class="px-4 py-2">Book Title</th>
+                            <th class="px-4 py-2">Returned Date</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200" id="book-list-body">
-                        <!-- Dynamic book data will be populated here -->
-                        @forelse($books ?? [] as $i => $b)
-                            <tr class="hover:bg-gray-50 book-row" data-book-id="{{ $b->id }}">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-medium text-gray-900">{{ $i + 1 }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700 book-barcode">{{ $b->barcode }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 book-title">{{ $b->title }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-green-600 font-semibold book-status">{{ $b->status }}</td>
+                    <tbody>
+                        @forelse($records ?? [] as $i => $r)
+                            <tr class="border-t">
+                                <td class="px-4 py-2 align-top">{{ $i + 1 }}</td>
+                                <td class="px-4 py-2 align-top font-medium">{{ $r['borrower'] }}</td>
+                                <td class="px-4 py-2 align-top">{{ $r['book'] }}</td>
+                                <td class="px-4 py-2 align-top">{{ $r['returned_date'] }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">Tiada buku tersedia</td>
+                                <td colspan="4" class="px-4 py-4 text-center text-sm text-gray-500">Tiada rekod pemulangan dalam 30 hari terakhir.</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
+
+
 <script>
     const modal = document.getElementById('custom-modal');
     const modalContainer = document.getElementById('modal-content-container');

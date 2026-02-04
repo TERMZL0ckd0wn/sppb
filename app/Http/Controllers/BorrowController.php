@@ -16,7 +16,37 @@ class BorrowController extends Controller
     {
         // Get all available books
         $books = book::where('status', '!=', 'borrowed')->orderBy('title')->get();
-        return view('staff.borrow', compact('books'));
+
+        // Build active borrow records (students + teachers) to show on staff page
+        $records = collect();
+
+        $stds = std_borrow::where('borrow_status', 'active')->get();
+        foreach ($stds as $s) {
+            $borrowerName = students::where('no_matrik', $s->no_matrik)->value('name') ?: $s->no_matrik;
+            $bookTitle = book::where('barcode', $s->barcode)->value('title') ?: $s->barcode;
+
+            $records->push([
+                'type' => 'Student',
+                'borrower' => $borrowerName,
+                'book' => $bookTitle,
+                'borrowed_date' => $s->borrowed_date ? Carbon::parse($s->borrowed_date)->toDateString() : '',
+            ]);
+        }
+
+        $ts = t_borrow::where('borrow_status', 'active')->get();
+        foreach ($ts as $t) {
+            $borrowerName = teachers::where('no_matrik', $t->no_matrik)->value('name') ?: $t->no_matrik;
+            $bookTitle = book::where('barcode', $t->barcode)->value('title') ?: $t->barcode;
+
+            $records->push([
+                'type' => 'Teacher',
+                'borrower' => $borrowerName,
+                'book' => $bookTitle,
+                'borrowed_date' => $t->borrowed_date ? Carbon::parse($t->borrowed_date)->toDateString() : '',
+            ]);
+        }
+
+        return view('staff.borrow', compact('books', 'records'));
     }
 
     // API endpoint to get borrower info
