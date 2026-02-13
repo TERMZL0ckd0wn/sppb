@@ -25,10 +25,6 @@ Route::get('/index', function () {
     return view('index');
 })->name('index');
 
-Route::get('/alumni', function () {
-    return view('AlumniKV');
-})->name('AlumniKV');
-
 Route::get('/layouts', function () {
     return view('layouts.app');
 })->name('layouts');
@@ -37,7 +33,7 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 // POST handler for login form
 Route::post('/login', [LoginController::class, 'login']);
 
-// Logout (optional)
+// Logout (optionu)
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 //Admin Routes
