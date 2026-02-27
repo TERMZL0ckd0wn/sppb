@@ -48,7 +48,7 @@ Langkah-langkah untuk menjalankan projek ini di persekitaran tempatan anda:
 - Pastikan perisian XAMPP telah dipasang dan diaktifkan (Apache & MySQL).
 - Letakkan folder projek ke dalam direktori htdocs.
 - Import fail SQL yang disediakan ke dalam phpMyAdmin.
-- Akses sistem melalui pelayar web di alamat "http://localhost/sppb/public" atau menggunakan terminal pada folder tersebut dengan menggunakan "php artisan serve".
+- Akses sistem melalui pelayar web di alamat "localhost/sppb/public" atau menggunakan terminal pada folder tersebut dengan menggunakan "php artisan serve".
 
 ## Username dan Password
 
