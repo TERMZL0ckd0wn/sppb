@@ -2,7 +2,7 @@
 @extends('layouts.staffheader')
 @section('content')
 
-    <h2 class="text-2xl font-extrabold text-center mb-8 tracking-widest">PEMULANGAN BUKU</h2>
+    <h2 class="text-2xl font-extrabold text-center mb-8 tracking-widest">PEMINJAMAN BUKU</h2>
     <div class="mb-4">
             <button type="button" onclick="history.back()" class="inline-flex items-center px-3 py-2 bg-white/20 text-gray-700 rounded-md hover:bg-white/30 transition">
                 <i class="fas fa-arrow-left mr-2"></i> Back
@@ -32,7 +32,7 @@
                     <label for="book-id" class="sr-only">Book ID</label>
                     <input type="text" id="book-id" placeholder="Book ID or Barcode" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 shadow-sm">
                 </div>
-                <button id="submit-btn" type="submit" disabled class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md">
+                <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md">
                     SUBMIT
                 </button>
             </form>
@@ -91,6 +91,36 @@
             </div>
         </div>
 
+        <!-- rekod peminjaman buku sahaja -->
+        <div class="mt-8 max-w-4xl mx-auto">
+            <h3 class="text-lg font-semibold mb-4">Rekod Peminjaman</h3>
+            <div class="bg-white rounded-lg shadow border border-gray-200 overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-2">#</th>
+                            <th class="px-4 py-2">Borrower Name</th>
+                            <th class="px-4 py-2">Book Title</th>
+                            <th class="px-4 py-2">Borrowed Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($records ?? [] as $i => $r)
+                            <tr class="border-t">
+                                <td class="px-4 py-2 align-top">{{ $i + 1 }}</td>
+                                <td class="px-4 py-2 align-top font-medium">{{ $r['borrower'] }}</td>
+                                <td class="px-4 py-2 align-top">{{ $r['book'] }}</td>
+                                <td class="px-4 py-2 align-top">{{ $r['borrowed_date'] }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-4 py-4 text-center text-sm text-gray-500">Tiada rekod aktif.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
     
     
     <!-- MODAL POPUP (Pengganti alert()) -->
@@ -106,38 +136,6 @@
         </div>
     </div>
 
-    <!-- rekod pemulangan buku sahaja -->
-
-        <div class="mt-8 max-w-4xl mx-auto">
-            <h3 class="text-lg font-semibold mb-4">Rekod Pemulangan</h3>
-            <div class="bg-white rounded-lg shadow border border-gray-200 overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="bg-gray-50">
-                            <th class="px-4 py-2">#</th>
-                            <th class="px-4 py-2">Borrower Name</th>
-                            <th class="px-4 py-2">Book Title</th>
-                            <th class="px-4 py-2">Returned Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($records ?? [] as $i => $r)
-                            <tr class="border-t">
-                                <td class="px-4 py-2 align-top">{{ $i + 1 }}</td>
-                                <td class="px-4 py-2 align-top font-medium">{{ $r['borrower'] }}</td>
-                                <td class="px-4 py-2 align-top">{{ $r['book'] }}</td>
-                                <td class="px-4 py-2 align-top">{{ $r['returned_date'] }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="px-4 py-4 text-center text-sm text-gray-500">Tiada rekod pemulangan dalam 30 hari terakhir.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
 
 <script>
     const modal = document.getElementById('custom-modal');
@@ -146,16 +144,9 @@
     const modalMessage = document.getElementById('modal-message');
     const modalCloseBtn = document.getElementById('modal-close-btn');
     const borrowForm = document.getElementById('borrow-form');
-    const submitBtn = document.getElementById('submit-btn');
 
     let borrowerData = null;
     let bookData = null;
-
-    function updateSubmitState() {
-        if (submitBtn) {
-            submitBtn.disabled = !(borrowerData && bookData);
-        }
-    }
 
     // Show modal
     function showModal(title, message) {
@@ -201,7 +192,6 @@
                     document.getElementById('p_program').value = data.program || '-';
                     document.getElementById('p_telefon').value = data.phone || '-';
                 }
-                updateSubmitState();
             })
             .catch(err => {
                 showModal('Ralat', 'Gagal mengambil maklumat peminjam');
@@ -231,44 +221,11 @@
                     document.getElementById('b_pengarang').value = data.author || '-';
                     document.getElementById('b_tahun').value = data.year || '-';
                 }
-                updateSubmitState();
             })
             .catch(err => {
                 showModal('Ralat', 'Gagal mengambil maklumat buku');
                 console.error(err);
             });
-    });
-
-    // clear cached data when input cleared
-    document.getElementById('your-id').addEventListener('input', function() {
-        if (!this.value.trim()) {
-            borrowerData = null;
-            updateSubmitState();
-            document.getElementById('p_id').value = '';
-            document.getElementById('p_nama').value = '';
-            document.getElementById('p_program').value = '';
-            document.getElementById('p_telefon').value = '';
-        }
-    });
-    document.getElementById('book-id').addEventListener('input', function() {
-        if (!this.value.trim()) {
-            bookData = null;
-            updateSubmitState();
-            document.getElementById('b_id').value = '';
-            document.getElementById('b_tajuk').value = '';
-            document.getElementById('b_pengarang').value = '';
-            document.getElementById('b_tahun').value = '';
-        }
-    });
-
-    // prevent enter key from submitting until lookup done
-    borrowForm.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            if (e.target && (e.target.id === 'book-id' || e.target.id === 'your-id')) {
-                e.target.blur();
-            }
-        }
     });
 
     // Handle form submission
@@ -285,15 +242,15 @@
             return;
         }
 
-        fetch('/return', {
-            method: 'PUT',
+        fetch('/borrow', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
             },
             body: JSON.stringify({
                 borrower_type: borrowerData.type,
-                borrower_no_matrik: borrowerData.no_matrik,
+                no_matrik: borrowerData.no_matrik,
                 barcode: bookData.barcode,
                 book_id: bookData.id,
             })
@@ -342,9 +299,6 @@
             }
         });
     }
-
-    // initialize submit state on load
-    updateSubmitState();
 
     // Modal close button
     modalCloseBtn.addEventListener('click', hideModal);

@@ -32,7 +32,7 @@
                     <label for="book-id" class="sr-only">Book ID</label>
                     <input type="text" id="book-id" placeholder="Book ID or Barcode" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 shadow-sm">
                 </div>
-                <button id="submit-btn" type="submit" disabled class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md">
+                <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md">
                     SUBMIT
                 </button>
             </form>
@@ -146,16 +146,9 @@
     const modalMessage = document.getElementById('modal-message');
     const modalCloseBtn = document.getElementById('modal-close-btn');
     const borrowForm = document.getElementById('borrow-form');
-    const submitBtn = document.getElementById('submit-btn');
 
     let borrowerData = null;
     let bookData = null;
-
-    function updateSubmitState() {
-        if (submitBtn) {
-            submitBtn.disabled = !(borrowerData && bookData);
-        }
-    }
 
     // Show modal
     function showModal(title, message) {
@@ -201,7 +194,6 @@
                     document.getElementById('p_program').value = data.program || '-';
                     document.getElementById('p_telefon').value = data.phone || '-';
                 }
-                updateSubmitState();
             })
             .catch(err => {
                 showModal('Ralat', 'Gagal mengambil maklumat peminjam');
@@ -231,44 +223,11 @@
                     document.getElementById('b_pengarang').value = data.author || '-';
                     document.getElementById('b_tahun').value = data.year || '-';
                 }
-                updateSubmitState();
             })
             .catch(err => {
                 showModal('Ralat', 'Gagal mengambil maklumat buku');
                 console.error(err);
             });
-    });
-
-    // clear cached data when input cleared
-    document.getElementById('your-id').addEventListener('input', function() {
-        if (!this.value.trim()) {
-            borrowerData = null;
-            updateSubmitState();
-            document.getElementById('p_id').value = '';
-            document.getElementById('p_nama').value = '';
-            document.getElementById('p_program').value = '';
-            document.getElementById('p_telefon').value = '';
-        }
-    });
-    document.getElementById('book-id').addEventListener('input', function() {
-        if (!this.value.trim()) {
-            bookData = null;
-            updateSubmitState();
-            document.getElementById('b_id').value = '';
-            document.getElementById('b_tajuk').value = '';
-            document.getElementById('b_pengarang').value = '';
-            document.getElementById('b_tahun').value = '';
-        }
-    });
-
-    // prevent enter key from submitting until lookup done
-    borrowForm.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            if (e.target && (e.target.id === 'book-id' || e.target.id === 'your-id')) {
-                e.target.blur();
-            }
-        }
     });
 
     // Handle form submission
@@ -342,9 +301,6 @@
             }
         });
     }
-
-    // initialize submit state on load
-    updateSubmitState();
 
     // Modal close button
     modalCloseBtn.addEventListener('click', hideModal);
