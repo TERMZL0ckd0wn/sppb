@@ -1,6 +1,6 @@
 <p align="center">
 <a href="#" target="_blank">
-<img src="https://img.icons8.com/fluency/96/library.png" width="100" alt="SPPB Al-Gazel Logo">
+<img src="https://img.icons8.com/fluency/96/book.png" width="100" alt="SPPB Al-Gazel Logo">
 </a>
 </p>
 
